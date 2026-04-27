@@ -425,9 +425,10 @@ class _SettingsPageWidgetState extends State<SettingsPageWidget> {
                       ),
                       AuthUserStreamWidget(
                         builder: (context) {
-                          final isServiceProvider =
-                              currentUserDocument?.role == 'service_provider';
-                          if (!isServiceProvider) return const SizedBox.shrink();
+                          final role = currentUserDocument?.role ?? '';
+                          final isServiceProvider = role == 'service_provider';
+                          final isClient = role == 'client';
+                          if (!isServiceProvider && !isClient) return const SizedBox.shrink();
                           return Column(
                             children: [
                               const SizedBox(height: 20),
@@ -437,7 +438,9 @@ class _SettingsPageWidgetState extends State<SettingsPageWidget> {
                                 icon: Icons.location_on_rounded,
                                 children: [
                                   Text(
-                                    'Set your current location so clients can find you on the map',
+                                    isClient
+                                        ? 'Set your current location so service providers can reach you easily'
+                                        : 'Set your current location so clients can find you on the map',
                                     style: GoogleFonts.ubuntu(
                                       fontSize: 12,
                                       color: theme.secondaryText,
